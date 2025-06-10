@@ -7,20 +7,21 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import StatesGroup
 from aiogram.utils import executor
-from aiogram.utils.exceptions import RetryAfter, BotBlocked
+from aiogram.utils.exceptions import BotBlocked
 from loguru import logger
 
-from . import dp
-from .bot_content import features
-from .bot_content.errors import Errors
-from .bot_infra.callbacks import game_cb
-from .bot_infra.filters import CreatorFilter, NonRegistrationFilter, RegistrationFilter
-from .bot_infra.states import UserForm, UserFormData
-from .bot_lib.aiogram_overloads import DbDispatcher
-from .bot_lib.bot_feature import Feature, InlineButton, TgUser
-from .bot_lib.utils import bot_edit_callback_message, bot_safe_send_message, bot_safe_send_photo
-from .config import settings
-from .db_infra import db, setup_db
+from tg_bot_template import dp
+from services import features
+from core.errors import Errors
+from interfaces.bot.callbacks import game_cb
+from interfaces.bot.filters import CreatorFilter, NonRegistrationFilter, RegistrationFilter
+from interfaces.bot.states import UserForm, UserFormData
+from core.overloads import DbDispatcher
+from services.feature_flags import Feature, InlineButton, TgUser
+from core.utils import bot_edit_callback_message, bot_safe_send_message, bot_safe_send_photo
+from core.config import settings
+from tg_bot_template.db_infra import setup_db
+from infrastructure.db import db
 
 # filters binding
 dp.filters_factory.bind(CreatorFilter)

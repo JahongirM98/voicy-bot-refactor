@@ -6,9 +6,9 @@ from loguru import logger
 from peewee_async import Manager
 
 from tg_bot_template import dp
-from tg_bot_template.bot_infra.states import UserFormData
-from tg_bot_template.bot_lib.bot_feature import TgUser
-from tg_bot_template.db_infra.models import Users
+from interfaces.bot.states import UserFormData
+from services.feature_flags import TgUser
+from infrastructure.db.models import Users
 
 
 def _get_conn() -> Manager:

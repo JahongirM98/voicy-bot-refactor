@@ -1,8 +1,8 @@
 from aiogram import types
 from loguru import logger
 
-from .aiogram_overloads import DbDispatcher
-from .bot_feature import Feature
+from core.overloads import DbDispatcher
+from services.feature_flags import Feature
 
 
 async def bot_safe_send_message(  # type: ignore[no-untyped-def]

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from tg_bot_template.bot_lib.bot_feature import Button, Feature, FeatureMenu, TgUtils
+from services.feature_flags import Button, Feature, FeatureMenu, TgUtils
 
 
 @dataclass
