@@ -1,12 +1,17 @@
-import peewee
+from sqlalchemy import Table, Column, Integer, BigInteger, String, Text, DateTime, MetaData
+from datetime import datetime
 
+metadata = MetaData()
 
-class Users(peewee.Model):  # type: ignore[misc]
-    id = peewee.PrimaryKeyField(null=False)
-    social_id = peewee.BigIntegerField(null=False)
-    username = peewee.CharField(max_length=50)
-    registration_date = peewee.DateTimeField(null=True)
-    taps = peewee.BigIntegerField(default=0)
-    name = peewee.TextField(null=True)
-    info = peewee.TextField(null=True)
-    photo = peewee.TextField(null=True)
+users = Table(
+    "users",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("social_id", BigInteger, nullable=False),
+    Column("username", String(50)),
+    Column("registration_date", DateTime, nullable=True, default=datetime.utcnow),
+    Column("taps", BigInteger, default=0),
+    Column("name", Text, nullable=True),
+    Column("info", Text, nullable=True),
+    Column("photo", Text, nullable=True),
+)

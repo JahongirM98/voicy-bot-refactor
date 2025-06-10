@@ -8,7 +8,7 @@ from peewee_async import Manager
 from tg_bot_template import dp
 from interfaces.bot.states import UserFormData
 from services.feature_flags import TgUser
-from infrastructure.db.models import Users
+from infrastructure.db.models import users
 
 
 def _get_conn() -> Manager:
@@ -20,13 +20,13 @@ async def check_user_registered(*, tg_user: TgUser) -> bool:
 
 
 @cached(ttl=0.2, serializer=PickleSerializer())
-async def get_user_for_filters(*, tg_user: TgUser) -> Users | None:
+async def get_user_for_filters(*, tg_user: TgUser) -> users | None:
     return await get_user(tg_user=tg_user)
 
 
-async def get_user(*, tg_user: TgUser) -> Users | None:
+async def get_user(*, tg_user: TgUser) -> users | None:
     try:
-        user = await _get_conn().get(Users, social_id=tg_user.tg_id)
+        user = await _get_conn().get(users, social_id=tg_user.tg_id)
     except Exception:
         return None
     else:
@@ -37,7 +37,7 @@ async def get_user(*, tg_user: TgUser) -> Users | None:
 
 async def create_user(*, tg_user: TgUser) -> None:
     await _get_conn().create(
-        Users, social_id=tg_user.tg_id, username=tg_user.username, registration_date=datetime.now()  # noqa: DTZ005
+        users, social_id=tg_user.tg_id, username=tg_user.username, registration_date=datetime.now()  # noqa: DTZ005
     )
     logger.info(f"New user[{tg_user.username}] registered")
 
@@ -58,5 +58,5 @@ async def incr_user_taps(*, tg_user: TgUser) -> None:
         await _get_conn().update(user)
 
 
-async def get_all_users() -> list[Users]:
-    return list(await _get_conn().execute(Users.select().order_by(Users.taps.desc())))
+async def get_all_users() -> list[users]:
+    return list(await _get_conn().execute(users.select().order_by(users.taps.desc())))
