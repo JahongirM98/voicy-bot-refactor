@@ -1,39 +1,22 @@
-FROM python:3.10 as base
-# set work directory
-WORKDIR /app/
+FROM python:3.12-slim
 
-FROM base as docker-entrypoint
+WORKDIR /app
 
-FROM docker-entrypoint as non-root
-RUN useradd -ms /bin/bash app
-USER app
+# Устанавливаем uv — современный пакетный менеджер
+RUN pip install --no-cache-dir uv
 
-FROM base as requirements-builder
+# Копируем только pyproject.toml для установки зависимостей
+COPY pyproject.toml ./
 
-WORKDIR /build/
+# Устанавливаем зависимости через uv (в системный Python)
+RUN uv pip install --system -r pyproject.toml
 
-RUN pip --no-cache-dir install poetry
+# Копируем всё приложение
+COPY . .
 
-COPY pyproject.toml poetry.lock /build/
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 
-RUN poetry export --without-hashes -f requirements.txt -o requirements.txt
+# Запускаем Alembic миграцию и основной скрипт
+CMD ["sh", "-c", "/wait-for-it.sh db:5432 -- alembic upgrade head && python main.py"]
 
-FROM non-root as app
-
-COPY --from=requirements-builder /build/requirements.txt /app/requirements.txt
-
-ENV PYTHONFAULTHANDLER=1 \
-  PYTHONUNBUFFERED=1 \
-  PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-# copy project
-COPY tg_bot_template ./tg_bot_template/
-
-# run app
-ENTRYPOINT ["python", "-m"]
-CMD ["tg_bot_template.bot"]
-
-FROM app

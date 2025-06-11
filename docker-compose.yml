@@ -1,10 +1,8 @@
-version: '3.9'
-
 services:
   db:
     image: postgres:15
-    restart: always
     container_name: voicy_postgres
+    restart: always
     ports:
       - "5432:5432"
     environment:
@@ -13,6 +11,18 @@ services:
       POSTGRES_DB: voicy
     volumes:
       - pg_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: voicy_backend
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/voicy
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"  # если будет FastAPI
 
 volumes:
   pg_data:
