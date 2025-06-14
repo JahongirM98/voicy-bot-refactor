@@ -17,6 +17,14 @@ COPY . .
 COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
-# Запускаем Alembic миграцию и основной скрипт
-CMD ["sh", "-c", "/wait-for-it.sh db:5432 -- alembic upgrade head && python main.py"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+CMD ["/entrypoint.sh"]
+
+COPY start_bot.sh /start_bot.sh
+RUN chmod +x /start_bot.sh
+
+
+# Запускаем Alembic миграцию и основнойl скрипт
+CMD ["sh", "-c", "/entrypoint.sh && uvicorn interfaces.api.main:app --host 0.0.0.0 --port 8000"]
 

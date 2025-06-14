@@ -18,11 +18,21 @@ services:
     depends_on:
       - db
     environment:
+      - PYTHONPATH=/app
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/voicy
     volumes:
       - .:/app
     ports:
       - "8000:8000"  # если будет FastAPI
+  bot:
+    build: .
+    command: /start_bot.sh
+    environment:
+      - PYTHONPATH=/app
+      - TG_BOT_TOKEN= # токен твоего телеграм-бота
+    depends_on:
+      - db
+
 
 volumes:
   pg_data:
