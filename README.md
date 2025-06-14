@@ -12,7 +12,7 @@
 
 1. Клонируйте репозиторий:
     ```bash
-    git clone https://github.com/yourusername/voicy-bot-refactor.git
+    git clone https://github.com/JahongirM98/voicy-bot-refactor.git
     cd voicy-bot-refactor
     ```
 
@@ -85,4 +85,11 @@
 - Вся логика — через сервисы и репозитории (без обращения к БД из transport/handlers)
 - Покрытие тестами бизнес-логики через pytest
 
+
 ---
+
+## Автор
+
+Джахонгир Мирхаликов  
+Почта: mirhalikovj@gmail.com
+Telegram: @mj4555
